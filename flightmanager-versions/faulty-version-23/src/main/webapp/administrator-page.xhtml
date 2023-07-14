@@ -1,0 +1,39 @@
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:t="http://myfaces.apache.org/tomahawk"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:head />
+
+    <ui:composition template="layout/template.xhtml">
+        <ui:define name="body">
+
+            <link rel="stylesheet" href="css/FM-reset-buttons.css" />
+            <f:event type="preRenderView" listener="#{loggedUserComponent.checkNotLoggedin}" />
+
+               <center>
+
+                <h:panelGroup rendered="#{loggedUserComponent.isAdmin()}">
+                    <h2>Administration Panel</h2>
+                    <h:form >
+                        <h:commandButton id="airportListBtn" class="btn btn-primary" action="#{airportController.goToAirportListPage}" value="Airports List" style="margin-left: 10px;"></h:commandButton>
+                        <h:commandButton id="addAirportBtn" class="btn btn-primary" action="#{airportController.startAndOpen()}" value="Add Airports" style="margin-left: 10px;"></h:commandButton>
+                    </h:form>
+                    <h:form >
+                        <h:commandButton id="flightsListBtn" class="btn btn-primary" action="#{flightController.goToFlightListPage}" value="Flights List" style="margin-left: 10px;"></h:commandButton>
+                        <h:commandButton id="addFlightBtn" class="btn btn-primary" action="#{flightController.startAndOpen()}" value="Add Flights" style="margin-left: 10px;" ></h:commandButton> 
+                    </h:form>
+                    <h:form >
+                        <h:commandButton id="countriesListBtn" class="btn btn-primary" action="#{countryController.goToCountryListPage}" value="Country List" style="margin-left: 10px;"></h:commandButton>
+                        <h:commandButton id="addCountryBtn" class="btn btn-info" action="#{countryController.startCountryAddition()}" value="Add Country" style="margin-left: 10px;" ></h:commandButton> 
+                    </h:form>
+                </h:panelGroup>
+            </center>
+
+        </ui:define>
+    </ui:composition>
+</f:view>

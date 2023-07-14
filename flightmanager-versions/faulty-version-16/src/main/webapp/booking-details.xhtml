@@ -1,0 +1,451 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<link rel="stylesheet" href="css/FM-index.css" />
+
+	<h:head />
+
+	<ui:composition template="layout/template.xhtml">
+		<ui:define name="body">
+			<c:if test="#{loggedUserComponent.loggedIn}">
+				<f:event type="preRenderView"
+					listener="#{registeredBookingController.initialize()}" />
+			</c:if>
+			<c:if test="#{not loggedUserComponent.loggedIn}">
+				<f:event type="preRenderView"
+					listener="#{visitorBookingController.initialize(searchFlightsController.flightOut, searchFlightsController.nPassengers)}" />
+			</c:if>
+			<h2>Insert booking data</h2>
+
+			<h:panelGroup rendered="#{loggedUserComponent.loggedIn}">
+				<h:form id="logged-form" onsubmit="return checkData()">
+					<h3>Insert email address</h3>
+					<p:inputText id="logged-email" class="email-input"
+						value="#{registeredBookingController.booking.email}"
+						style="max-width: 350px;" validatorMessage="Email is not valid"
+						onchange="loggedValidateEmail(this);">
+						<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+
+					<p id="logged-popup"
+						style="display: none; background-color: yellow; position: absolute; left: 380px; top: 0px; width: 250px; padding: 10px;">
+						The email address allows you to view and modify the booking in <b>My
+							Booking</b> section
+					</p>
+					<img src="img/info.png" alt="info" style="width: 20px;"
+						onmouseover="document.getElementById('popup').style.display = 'block';"
+						onmouseout="document.getElementById('popup').style.display = 'none';" />
+
+					<p id="logged-emailLabel" style="color: red; position: absolute;"></p>
+					<p:watermark for="logged-email" value="Email Address" />
+					<p:message for="logged-email"
+						style="display: block; max-width: 350px;" />
+
+					<br />
+					<br />
+
+					<h:inputHidden id="logged-fo"
+						value="#{registeredBookingController.flightOut}" />
+					<h:inputHidden id="logged-np"
+						value="#{registeredBookingController.nPassengers}" />
+
+					<h3>Insert passengers data</h3>
+					<table class="passengers-table">
+						<tr>
+							<td></td>
+							<td><b>First name</b></td>
+							<td><b>Surname</b></td>
+							<td><b>ID-Card</b></td>
+							<td><b>Date of birth</b></td>
+						</tr>
+						<ui:repeat var="passenger"
+							value="#{registeredBookingController.passengers}" varStatus="row">
+							<tr>
+								<td>
+									<b>Passenger #{row.index + 1}</b>
+								</td>
+								<td>
+									<h:inputText class="inputform name-input"
+											name="name"
+											a:placeholder="First name"
+											value="#{passenger.firstName}"/>
+								</td>
+								<td>
+									<h:inputText class="inputform surname-input"
+											name="surname"
+											a:placeholder="Surname"
+											value="#{passenger.surname}"/>
+								</td>
+								<td>
+									<h:inputText class="inputform id-card-input"
+											name="idcard"
+											a:placeholder="Identity card number"
+											value="#{passenger.idCard}"/>
+								</td>
+								<td>
+									<p:calendar class="inputform birth-date-calendar"
+											widgetVar="mycal#{row.index}"
+											name="birth"
+											pattern="dd/MM/yyyy"
+											a:placeholder="DD/MM/YYYY"
+											value="#{passenger.dateOfBirth}"
+											maxdate="new Date()">
+									</p:calendar>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+
+					<!-- 			PRICE BOX -->
+					<table id="logged-price"
+						style="position: fixed; top: 10px; right: 10px; width: 300px; background-color: RoyalBlue; opacity: 0.5; color: black; padding: 5px; border: 1px; border-style: solid;"
+						onmouseover="loggedOpacityOne()" onmouseout="loggedOpacityZero()">
+						<tr>
+							<td></td>
+							<td><h4>
+									<b>Price </b>
+								</h4></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>per person (with fees)</td>
+							<td style="text-align: center;">x
+								#{registeredBookingController.nPassengers}</td>
+						</tr>
+						<tr>
+							<h:panelGroup
+								rendered="#{registeredBookingController.flightOut != 0}">
+								<td><h5>Forward flight:</h5></td>
+								<td><h5>€
+										#{registeredBookingController.getPriceFlightOut()}</h5></td>
+								<td><h5>€
+										#{registeredBookingController.getTotalPriceForward()}</h5></td>
+							</h:panelGroup>
+						</tr>
+						<tr>
+							<td><h4>
+									<b>Total:</b>
+								</h4></td>
+							<td></td>
+							<td><h4>
+									<h:panelGroup id="logged-full-price"
+											class="full-price-text">
+										<b>€ #{registeredBookingController.finalPriceFull}</b>
+									</h:panelGroup>
+								</h4></td>
+						</tr>
+						<h:panelGroup
+							rendered="#{registeredBookingController.isDiscounted()}">
+							<tr>
+								<td>
+									<p style="color: red; padding-top: 15px;">
+										<b>Special offer!</b>
+									</p>
+								</td>
+								<td style="padding-top: 15px;"><h4>
+										<b>€ #{registeredBookingController.finalPrice}</b>
+									</h4></td>
+							</tr>
+						</h:panelGroup>
+					</table>
+
+					<h:inputHidden id="logged-flightOut"
+						value="#{registeredBookingController.flightOut}"></h:inputHidden>
+					<h:inputHidden id="logged-nPassengers"
+						value="#{registeredBookingController.nPassengers}"></h:inputHidden>
+
+					<h:commandButton
+							class="btn btn-success confirm-btn"
+							style="float: right"
+							action="#{registeredBookingController.save()}"
+							onclick="return loggedCheckData()"
+							value="Confirm Reservation">
+					</h:commandButton>
+				</h:form>
+
+				<h:form id="logged-form-cancel">
+					<h:commandButton
+							class="btn btn-danger cancel-btn"
+							style="float: left"
+							action="#{registeredBookingController.cancel}"
+							value="Cancel">
+					</h:commandButton>
+				</h:form>
+
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{not loggedUserComponent.loggedIn}">
+
+				<h:form id="form" onsubmit="return checkData()">
+
+					<h3>Insert email address</h3>
+					<p:inputText id="email" class="email-input"
+						value="#{visitorBookingController.booking.email}"
+						style="max-width: 350px;" validatorMessage="Email is not valid"
+						onchange="validateEmail(this);">
+						<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+
+					<p id="popup"
+						style="display: none; background-color: yellow; position: absolute; left: 380px; top: 0px; width: 250px; padding: 10px;">
+						The email address allows you to view and modify the booking in <b>My
+							Booking</b> section
+					</p>
+					<img src="img/info.png" alt="info" style="width: 20px;"
+						onmouseover="document.getElementById('popup').style.display = 'block';"
+						onmouseout="document.getElementById('popup').style.display = 'none';" />
+
+					<p id="emailLabel" style="color: red; position: absolute;"></p>
+					<p:watermark for="email" value="Email Address" />
+					<p:message for="email" style="display: block; max-width: 350px;" />
+
+					<br />
+					<br />
+
+					<h:inputHidden id="fo"
+						value="#{visitorBookingController.flightOut}" />
+					<h:inputHidden id="np"
+						value="#{visitorBookingController.nPassengers}" />
+
+					<h3>Insert passengers data</h3>
+					<table class="passengers-table">
+						<tr>
+							<td></td>
+							<td><b>First name</b></td>
+							<td><b>Surname</b></td>
+							<td><b>ID-Card</b></td>
+							<td><b>Date of birth</b></td>
+						</tr>
+						<ui:repeat var="passenger"
+							value="#{visitorBookingController.passengers}" varStatus="row">
+							<tr>
+								<td>
+									<b>Passenger #{row.index + 1}</b>
+								</td>
+								<td>
+									<h:inputText class="inputform name-input"
+											name="name"
+											a:placeholder="First name"
+											value="#{passenger.firstName}"/>
+								</td>
+								<td>
+									<h:inputText class="inputform surname-input"
+											name="surname"
+											a:placeholder="Surname"
+											value="#{passenger.surname}"/>
+								</td>
+								<td>
+									<h:inputText class="inputform id-card-input"
+											name="idcard"
+											a:placeholder="Identity card number"
+											value="#{passenger.idCard}"/>
+								</td>
+								<td>
+									<p:calendar class="inputform birth-date-calendar"
+											widgetVar="mycal#{row.index}"
+											name="birth"
+											pattern="dd/MM/yyyy"
+											a:placeholder="DD/MM/YYYY"
+											value="#{passenger.dateOfBirth}"
+											maxdate="new Date()">
+									</p:calendar>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+
+					<!-- PRICE BOX -->
+					<table id="price"
+						style="position: fixed; top: 10px; right: 10px; width: 300px; background-color: RoyalBlue; opacity: 0.5; color: black; padding: 5px; border: 1px; border-style: solid;"
+						onmouseover="opacityOne()" onmouseout="opacityZero()">
+						<tr>
+							<td></td>
+							<td><h4>
+									<b>Price</b>
+								</h4></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>per person (with fees)</td>
+							<td style="text-align: center;">x
+								#{visitorBookingController.nPassengers}</td>
+						</tr>
+						<tr>
+							<h:panelGroup
+								rendered="#{visitorBookingController.flightOut != 0}">
+								<td><h5>Forward flight:</h5></td>
+								<td><h5>€
+										#{visitorBookingController.getPriceFlightOut()}</h5></td>
+								<td><h5>€
+										#{visitorBookingController.getTotalPriceForward()}</h5></td>
+							</h:panelGroup>
+						</tr>
+						<tr>
+							<td><h4>
+									<b>Total:</b>
+								</h4></td>
+							<td></td>
+							<td><h4>
+									<h:panelGroup id="full-price"
+											class="full-price-text">
+										<b>€ #{visitorBookingController.finalPriceFull}</b>
+									</h:panelGroup>
+								</h4></td>
+						</tr>
+						<h:panelGroup
+							rendered="#{visitorBookingController.isDiscounted()}">
+							<tr>
+								<td>
+									<p style="color: red; padding-top: 15px;">
+										<b>Special offer!</b>
+									</p>
+								</td>
+								<td style="padding-top: 15px;"><h4>
+										<b>€ #{visitorBookingController.finalPrice}</b>
+									</h4></td>
+							</tr>
+						</h:panelGroup>
+					</table>
+					<h:inputHidden id="flightOut"
+						value="#{visitorBookingController.flightOut}"></h:inputHidden>
+					<h:inputHidden id="nPassengers"
+						value="#{visitorBookingController.nPassengers}"></h:inputHidden>
+
+					<h:commandButton
+							class="btn btn-success confirm-btn"
+							style="float: right"
+							action="#{visitorBookingController.save()}"
+							onclick="return checkData()"
+							value="Confirm Reservation">
+					</h:commandButton>
+
+				</h:form>
+				<h:form id="form-cancel">
+					<h:commandButton
+							class="btn btn-danger cancel-btn"
+							style="float: left"
+							action="#{visitorBookingController.cancel}"
+							value="Cancel">
+					</h:commandButton>
+				</h:form>
+			</h:panelGroup>
+
+
+			<script type="text/javascript">
+                function validateEmail(emailField) {
+                    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                    if (reg.test(emailField.value) == false) {
+                        document.getElementById('form:email').style.border = "3px solid #FF0000";
+                        document.getElementById('emailLabel').innerHTML = "Invalid email address";
+
+                        return false;
+                    } else {
+                        document.getElementById('form:email').style.border = "1px solid grey";
+                        document.getElementById('emailLabel').innerHTML = "";
+                    }
+                    return true;
+                }
+
+                function opacityOne() {
+                    document.getElementById('price').style.opacity = '1';
+                }
+
+                function opacityZero() {
+                    document.getElementById('price').style.opacity = '0.65';
+                }
+
+                function checkData() {
+                    var names = document.getElementsByClassName("inputform");
+                    var i = 0;
+                    var error = false;
+
+                    //check email
+                    if (document.getElementById("form:email").value == "") {
+                        alert("Insert a valid email address");
+                        return false;
+                    }
+                    //check all fields
+                    for (i = 0; i &lt; names.length; i++) {
+                        if (names[i].value == "")
+                            error = true;
+                    }
+                    //check date of birth
+                    for (i = 0; i &lt; document.getElementById("form:np").value; i++) {
+                        if (PF('mycal' + i).getDate() == null)
+                            error = true;
+                    }
+                    if (error == true) {
+                        alert("Incomplete data entered");
+                        return false;
+                    }
+
+                    document.getElementById("form:flightOut").value = document.getElementById("form:fo").value;
+                    document.getElementById("form:nPassengers").value = document.getElementById("form:np").value;
+                    return true;
+                }
+
+                function loggedValidateEmail(emailField) {
+                    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                    if (reg.test(emailField.value) == false) {
+                        document.getElementById('logged-form:logged-email').style.border = "3px solid #FF0000";
+                        document.getElementById('logged-emailLabel').innerHTML = "Invalid email address";
+
+                        return false;
+                    } else {
+                        document.getElementById('logged-form:logged-email').style.border = "1px solid grey";
+                        document.getElementById('logged-emailLabel').innerHTML = "";
+                    }
+                    return true;
+                }
+
+                function loggedOpacityOne() {
+                    document.getElementById('logged-price').style.opacity = '1';
+                }
+
+                function loggedOpacityZero() {
+                    document.getElementById('logged-price').style.opacity = '0.65';
+                }
+
+                function loggedCheckData() {
+                    var names = document.getElementsByClassName("logged-inputform");
+                    var i = 0;
+                    var error = false;
+
+                    //check email
+                    if (document.getElementById("logged-form:logged-email").value == "") {
+                        alert("Insert a valid email address");
+                        return false;
+                    }
+                    //check all fields
+                    for (i = 0; i &lt; names.length; i++) {
+                        if (names[i].value == "")
+                            error = true;
+                    }
+                    //check date of birth
+                    for (i = 0; i &lt; document.getElementById("logged-form:logged-np").value; i++) {
+                        if (PF('mycal' + i).getDate() == null)
+                            error = true;
+                    }
+                    if (error == true) {
+                        alert("Incomplete data entered");
+                        return false;
+                    }
+
+                    document.getElementById("logged-form:logged-flightOut").value = document.getElementById("logged-form:logged-fo").value;
+                    document.getElementById("logged-form:logged-nPassengers").value = document.getElementById("logged-form:logged-np").value;
+                    return true;
+                }
+            </script>
+		</ui:define>
+	</ui:composition>
+</f:view>

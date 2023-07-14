@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+	<defaultProtocol type="Servlet 3.0"></defaultProtocol>
+
+<!-- 	<extension qualifier="webdriver"> <property name="browser">chrome</property> 
+ 		<property name="chromeDriverBinary">/home/leonardo/.local/webdrivers/chromedriver</property> 
+		</extension>
+ -->
+
+<!--  	<extension qualifier="webdriver"> <property name="browser">chrome</property> 
+		</extension>
+ -->
+
+	<!--
+	  <property name="browser">chrome</property>
+ 		<property name="chromeDriverBinary">/home/leonardo/.local/webdrivers/chromedriver</property>
+-->
+<!-- 	<extension qualifier="webdriver">
+	      	<property name="browser">firefox</property>
+ 		<property name="firefoxDriverBinary">/home/leonardo/.local/webdrivers/geckodriver</property>
+ 	</extension>
+ -->
+ 	<extension qualifier="webdriver">
+	      	<property name="browser">firefox</property>
+ 	</extension>
+
+ </arquillian>

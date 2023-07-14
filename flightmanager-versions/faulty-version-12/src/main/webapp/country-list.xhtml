@@ -1,0 +1,57 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+	<h:head />
+
+	<ui:composition template="layout/template.xhtml">
+		<ui:define name="body">
+
+			<link rel="stylesheet" href="css/FM-index.css" />
+
+			<f:event type="preRenderView"
+				listener="#{loggedUserComponent.checkNotLoggedin()}" />
+
+			<h:panelGroup rendered="#{loggedUserComponent.isAdmin()}">
+
+				<h2>Show Country</h2>
+
+				<center>
+					<h:form id="form" style="max-width: 950px;">
+						<h:panelGroup
+							rendered="#{!countryController.countryList.isEmpty()}">
+							<table style="border: 2px; border-style: outset" id="countries">
+								<tr style="font-weight: bold">
+									<td>Country</td>
+									<td>Code</td>
+									<td>Fee</td>
+									<td>UE</td>
+								</tr>
+								<ui:repeat var="country"
+									value="#{countryController.countryList}">
+									<tr>
+										<td><h4>#{country.name}</h4></td>
+										<td><h4>#{country.countryCode}</h4></td>
+										<td><h4>#{country.countryFee}</h4></td>
+										<td><h4>#{country.UE}</h4></td>
+									</tr>
+								</ui:repeat>
+							</table>
+						</h:panelGroup>
+					</h:form>
+					<h:form>
+						<h:commandButton styleClass="btn btn-warning"
+							id="backBtn"
+							action="#{countryController.returnHome}"
+							value="Back to home" />
+					</h:form>
+				</center>
+
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</f:view>

@@ -1,0 +1,11 @@
+.classpath
+.metadata/
+.project
+.settings/
+/*/target
+target
+/*/.classpath
+lib/
+log.txt
+README.pdf
+/.tern-project

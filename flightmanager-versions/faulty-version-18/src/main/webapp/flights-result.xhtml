@@ -1,0 +1,188 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{searchFlightsController.initializeSearch}"/>
+	</f:metadata>
+
+	<h:head />
+
+	<ui:composition template="layout/template.xhtml">
+		<ui:define name="body">
+			<h2>Flights results</h2>
+
+			<h:form id="form">
+				<h4 style="text-align: center;">
+					Forward flights - From <B>#{searchFlightsController.source}</B> to
+					<B>#{searchFlightsController.destination}</B> on <b>#{util.getOnlyDate(searchFlightsController.departureDate)}</b>
+					for <B><span id="npass">#{searchFlightsController.nPassengers}</span></B>
+					passengers
+				</h4>
+				<h:panelGroup rendered="#{!searchFlightsController.getFlights().isEmpty()}">
+					<table id="flights-table"
+							style="border: 2px; border-style: outset">
+						<tr style="font-weight: bold">
+							<td style="padding-left: 15px; width: 25%">From</td>
+							<td>Duration</td>
+							<td style="width: 25%">To</td>
+							<td>Flight number</td>
+							<td>Price per person</td>
+							<td>Actions</td>
+						</tr>
+						<ui:repeat var="flight"
+							value="#{searchFlightsController.getFlights()}" varStatus="row">
+							<tr>
+								<td style="width: 25%; padding-left: 15px"><h4
+										style="margin-bottom: 2px;">
+										#{flight.sourceAirport.cityName} - <b>#{util.getOnlyHoursAndMinutes(flight.departureTime)}</b>
+									</h4> <h:panelGroup rendered="#{flight.sourceAirport.GMT > 0}">
+										<i style="font-size: 18px; float: right;">GMT:
+											+#{flight.sourceAirport.GMT}</i>
+									</h:panelGroup> <h:panelGroup rendered="#{1 > flight.sourceAirport.GMT}">
+										<i style="font-size: 18px; float: right;">GMT:
+											#{flight.sourceAirport.GMT}</i>
+									</h:panelGroup></td>
+
+								<td><h5>#{util.getOnlyHoursAndMinutes(flight.flightDuration)}</h5></td>
+								<td style="width: 25%"><h4 style="margin-bottom: 2px;">
+										#{flight.destinationAirport.cityName} - <b>#{util.getArrivalTime(flight)}</b>
+									</h4> <h:panelGroup rendered="#{flight.destinationAirport.GMT > 0}">
+										<i style="font-size: 18px; float: right;">GMT:
+											+#{flight.destinationAirport.GMT}</i>
+									</h:panelGroup> <h:panelGroup rendered="#{1 > flight.destinationAirport.GMT}">
+										<i style="font-size: 18px; float: right;">GMT:
+											#{flight.destinationAirport.GMT}</i>
+									</h:panelGroup></td>
+								<td><h4>#{flight.flightNumber}</h4></td>
+								<td><label for="#{flight.id}">€
+										#{flight.pricePerPerson} <input type="radio" name="flightOut"
+										id="#{flight.id}" value="#{flight.id}"
+										checked="#{row.index==0 and searchFlightsController.isAvailable(flight)?'checked':''}"
+										disabled="#{searchFlightsController.isAvailableStr(flight)}" />
+								</label></td>
+								<td>
+									<h:commandButton class="btn btn-primary details-btn"
+											value="Details"
+											action="#{searchFlightsController.getFlightDetails(flight)}">
+									</h:commandButton>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</h:panelGroup>
+				<br />
+
+
+				<h:panelGroup rendered="#{loggedUserComponent.loggedIn}">
+					<h:inputHidden id="logged-selectedIdOut"
+						value="#{searchFlightsController.flightOut}"></h:inputHidden>
+					<h:inputHidden id="logged-nPassengers"
+						value="#{searchFlightsController.nPassengers}"></h:inputHidden>
+
+					<h:commandButton class="btn btn-success confirm-btn"
+							style="float: right"
+							rendered="#{flightManagerComponent.existsResult()}"
+							onclick="return loggedCheckSelected()"
+							action="#{searchFlightsController.confirmFlights('registered')}"
+							value="Confirm Flights">
+					</h:commandButton>
+					
+					<h:commandButton class="btn btn-danger cancel-btn"
+							style="float: left"
+							action="#{searchFlightsController.backToHome}"
+							value="Cancel">
+					</h:commandButton>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{not loggedUserComponent.loggedIn}">
+					<h:inputHidden id="selectedIdOut"
+						value="#{searchFlightsController.flightOut}"></h:inputHidden>
+					<h:inputHidden id="nPassengers"
+						value="#{searchFlightsController.nPassengers}"></h:inputHidden>
+
+					<h:commandButton class="btn btn-success confirm-btn"
+							style="float: right"
+							rendered="#{flightManagerComponent.existsResult()}"
+							onclick="return checkSelected()"
+							action="#{searchFlightsController.confirmFlights('visitor')}"
+							value="Confirm Flights">
+					</h:commandButton>
+					
+					<h:commandButton class="btn btn-danger cancel-btn"
+							style="float: left"
+							action="#{searchFlightsController.backToHome}"
+							value="Cancel">
+					</h:commandButton>
+				</h:panelGroup>
+
+			</h:form>
+
+			<script type="text/javascript">
+				function loggedCheckSelected(){
+
+				var flightsOut = new Array();
+				var flightsBack = new Array();
+				document.getElementById("form:logged-selectedIdOut").value = 0;
+
+				if(document.getElementsByName('flightOut') != null)
+					flightsOut = document.getElementsByName('flightOut');
+
+				var flightOutIdSelected = null;
+				var i;
+				//dare la possibilità di scegliere un solo volo se l'altro non presente
+
+				for(i=0; i &lt; flightsOut.length; i++){
+					if(flightsOut[i].checked)
+						flightOutIdSelected = flightsOut[i].value;
+				}
+				if(flightsOut.length &gt; 0){
+					if(flightOutIdSelected == null){
+						alert("Select a forward flight");
+						return false;
+					}else
+						document.getElementById("form:logged-selectedIdOut").value = flightOutIdSelected;
+				}
+
+				document.getElementById("form:logged-nPassengers").value = document.getElementById("npass").innerHTML;
+
+				return true;
+			}
+		      function checkSelected(){
+		    	  
+			    var flightsOut = new Array();
+			    var flightsBack = new Array();
+			    document.getElementById("form:selectedIdOut").value = 0;
+			    
+		  		if(document.getElementsByName('flightOut') != null)
+					flightsOut = document.getElementsByName('flightOut');
+				
+			  	var flightOutIdSelected = null;
+				var i;
+				//dare la possibilità di scegliere un solo volo se l'altro non presente
+				
+			  	for(i=0; i &lt; flightsOut.length; i++){
+			  		if(flightsOut[i].checked)
+			  			flightOutIdSelected = flightsOut[i].value;
+				}
+				if(flightsOut.length &gt; 0){
+					if(flightOutIdSelected == null){
+						alert("Select a forward flight");
+						return false;
+					}else
+						document.getElementById("form:selectedIdOut").value = flightOutIdSelected;
+		      	}
+				
+			  	document.getElementById("form:nPassengers").value = document.getElementById("npass").innerHTML;
+			  	
+				return true;
+			  }
+		</script>
+
+		</ui:define>
+	</ui:composition>
+</f:view>

@@ -1,0 +1,152 @@
+<f:view
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:t="http://myfaces.apache.org/tomahawk"
+		xmlns:p="http://primefaces.org/ui"
+		xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+		xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:head />
+
+	<ui:composition template="layout/template.xhtml">
+		<ui:define name="body">
+
+			<link rel="stylesheet" href="css/FM-index.css" />
+
+			<f:event type="preRenderView" listener="#{loggedUserComponent.checkNotLoggedin()}" />
+
+			<h:panelGroup rendered="#{loggedUserComponent.isLoggedIn()}">
+
+				<h2>Insert flight</h2>
+				<center>
+					<h4 style="color: red">#{flightController.error}</h4>
+
+					<h:form id="form" style="max-width: 900px;">
+						<table>
+							<tr style="font-weight: bold">
+								<td>Flight number</td>
+								<td>Date</td>
+								<td>Departure time (HH:MM)</td>
+								<td>Flight duration (minutes)</td>
+								<td>Passengers</td>
+								<td>Price per person (€)</td>
+								<!--<td>Repeat for (days)</td>-->
+							</tr>
+							<tr>
+								<td>
+									<h:inputText id="flight-number-input"
+											value="#{flightController.flight.flightNumber}"
+											a:placeholder="F1234">
+									</h:inputText>
+								</td>
+								<td style="
+										width: 130px; 
+										padding-top: 0 !important;
+										padding-bottom: 14px !important;">
+									<p:calendar id="departure-date-calendar"
+											value="#{flightController.flight.departureDate}"
+											pattern="dd/MM/yyyy">
+									</p:calendar>
+								</td>
+								<td>
+									<h:inputText id="departure-time-input"
+											value="#{flightController.flight.departureTime}"
+											a:placeholder="17:55">
+										<f:convertDateTime pattern="HH:mm"/>
+									</h:inputText>
+								</td>
+								<td>
+									<h:inputText id="duration-input"
+											value="#{flightController.flight.flightDuration}">
+									</h:inputText>
+								</td>
+								<td>
+									<h:inputText id="passengers-input"
+											value="#{flightController.flight.totalSeats}">
+									</h:inputText>
+								</td>
+								<td>
+									<h:inputText id="price-per-person-input"
+											value="#{flightController.flight.pricePerPerson}">
+									</h:inputText>
+								</td>
+							</tr>
+						</table>
+						<table>
+							<tr>
+								<td>
+									<h4 style="width: 100px;">From:</h4>
+								</td>
+								<td style="width: 34%">
+									<h:selectOneMenu id="origin-select"
+											value="#{flightController.sourceAirportId}">
+										<f:selectItems
+												value="#{flightController.airports}"
+												var="airport"
+												itemLabel="#{airport.cityName}"
+												itemValue="#{airport.id}" />
+									</h:selectOneMenu>
+								</td>
+								<td>
+									<h4 style="width: 100px; margin-left: 40px;">To:</h4>
+								</td>
+								<td style="width: 34%">
+									<h:selectOneMenu id="destination-select"
+											value="#{flightController.destinationAirportId}">
+										<f:selectItems
+												value="#{flightController.airports}"
+												var="airport"
+												itemLabel="#{airport.cityName}"
+												itemValue="#{airport.id}" />
+									</h:selectOneMenu>
+								</td>
+							</tr>
+						</table>
+								
+						<h:commandButton id ="cancel-btn"
+								action="#{flightController.stopConversationAndReturnHome()}"
+								value="Cancel"
+								styleClass="btn btn-danger"
+								style="margin-left: 10px;">
+						</h:commandButton>
+
+						<h:commandButton id="next-btn"
+								styleClass="btn btn-success"
+								onclick="return checkData()"
+								action="#{flightController.saveInfoAndNext()}"
+								value="Next"
+								style="margin-left:10px;">
+						</h:commandButton> <!-- action="#{insertFlightController.saveFlight()}" -->
+					</h:form>
+				</center>
+
+				<script type="text/javascript">
+					function checkData(){
+						if(document.getElementById('form:flight-number-input').value == ""){
+							alert("Incorrect data entered");
+							return false;
+						}
+						var val = document.getElementById('form:departure-time-input').value;
+						var reg = /(0[0-9]|1[0-9]|2[0-3])[:]([0-5][0-9])/;
+						if(!val.match(reg)){
+							alert('Format error in "Departure time" field');
+							return false;
+						}
+
+						if(document.getElementById('form:origin-select').value ==
+								document.getElementById('form:destination-select').value) {
+							/* &amp;&amp; sourceAirRadio.checked &amp;&amp; destinationAirRadio.checked  */
+							alert("Source and destination can not be equals");
+							return false;
+						}
+
+						return true;
+					}
+
+				</script>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</f:view>

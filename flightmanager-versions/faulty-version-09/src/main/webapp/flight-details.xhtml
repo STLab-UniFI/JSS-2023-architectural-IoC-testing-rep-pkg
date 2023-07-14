@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="layout/template.xhtml">
+    <ui:define name="body">
+
+        <link rel="stylesheet" href="css/FM-index.css" />
+
+        <h3>Flight Details</h3>
+        <h4 style="color: red; text-align: center;">#{searchFlightsController.error}</h4>
+
+        <center>
+
+            <h:form id="details-form">
+                <table id="results">
+                    <tr style="font-weight: bold">
+                        <td>Flight number</td>
+                        <td>Date</td>
+                        <td>Departure time (HH:MM)</td>
+                        <td>Flight duration (minutes)</td>
+                        <td>Total seats</td>
+                        <td>Reserved seats</td>
+                        <td>Pending seats</td>
+                        <td style="min-width: 100px;">Price per person</td>
+                    </tr>
+                    <tr>
+                        <td><h:outputText name="flight-number" value="#{searchFlightsController.detailedFlight.flightNumber}"></h:outputText></td>
+                        <td style="width: 130px;">#{util.getOnlyDate(searchFlightsController.detailedFlight.departureDate)}</td>
+                        <td>
+                            <h:outputText name="departure-time" value="#{searchFlightsController.detailedFlight.departureTime}">
+                                <f:convertDateTime pattern="HH:mm" />
+                            </h:outputText>
+                        </td>
+                        <td><h:outputText name="duration" value="#{searchFlightsController.detailedFlight.flightDuration}"></h:outputText></td>
+                        <td><h:outputText name="total-seat" value="#{searchFlightsController.detailedFlight.totalSeats}"></h:outputText></td>
+                        <td><h:outputText name="reserved-seats" value="#{searchFlightsController.detailedFlight.reservedSeats}"></h:outputText></td>
+                        <td><h:outputText name="pending-seats" value="#{searchFlightsController.pendingSeats()}"></h:outputText></td>
+                        <td><h:outputText name="price" value="€ (#{searchFlightsController.detailedFlight.pricePerPerson} + #{searchFlightsController.totalFee})"  ></h:outputText></td>
+                    </tr>
+                </table>
+                <h:panelGroup rendered="#{loggedUserComponent.loggedIn}">
+                     <h:commandButton class="btn btn-warning back-btn"
+                    		action="#{searchFlightsController.backToFlightResult}"
+                    		value="Back"/>
+
+                    <h:commandButton class="btn btn-success confirm-btn"
+                    		action="#{searchFlightsController.confirmFlights('registered')}"
+                    		value="Confirm"/>
+                </h:panelGroup>
+                
+                <h:panelGroup rendered="#{not loggedUserComponent.loggedIn}">
+                     <h:commandButton class="btn btn-warning back-btn"
+                    		action="#{searchFlightsController.backToFlightResult}"
+                    		value="Back"/>
+                    <h:commandButton class="btn btn-success confirm-btn"
+                    		action="#{searchFlightsController.confirmFlights('visitor')}"
+                    		value="Confirm"/>
+                </h:panelGroup>
+            </h:form>
+
+            <h4>Search for another flight</h4>
+
+            <h:form id="form" style="width: 700px;">
+
+                <table>
+                    <tr style="margin: 0">
+                        <td style="width: 50%; margin-bottom: 0">
+                            <h:panelGrid columns="2" columnClasses="noborder, noborder">
+                                <h:outputLabel value="From" />
+                                
+                                <h:selectOneMenu id="origin-select"
+                                		value="#{searchFlightsController.source}">
+                                    <f:selectItems
+                                    		value="#{searchFlightsController.sources}"
+                                    		var="airport"
+                                    		itemLabel="#{airport}"
+                                    		/>
+                                    <f:ajax
+                                    		event="click"
+                                    		render="form:destination-select"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </td>
+                        <td style="width: 50%">
+                            <h:panelGrid columns="2" columnClasses="noborder, noborder">
+                                <h:outputLabel value="To" />
+                                
+                                <h:selectOneMenu id="destination-select"
+                                		value="#{searchFlightsController.destination}">
+                                    <f:selectItems
+                                    		value="#{searchFlightsController.destinations}"
+                                    		var="airport"
+                                    		itemLabel="#{airport}"
+                                    		itemDisabled="#{not searchFlightsController.enabledDestination(airport)}"/>
+                                    <f:ajax
+                                    		event="click"
+                                    		render="form:availableDates"
+                                    		execute="form:origin-select form:destination-select"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </td>
+                    </tr>
+                    
+					<tr>
+						<td>
+							<h:panelGrid columns="2" columnClasses="noborder, noborder">
+								<h:outputLabel value="Flight Date" />
+								
+								<p:calendar id="departure-date-calendar"
+										minDate="new Date()"
+										widgetVar="calend"
+										pattern="dd/MM/yyyy"
+										value="#{searchFlightsController.departureDate}">
+									<f:ajax
+											event="click"
+											render="form:availableDates"
+											execute="form:origin-select form:destination-select" />
+								</p:calendar>
+							</h:panelGrid>
+						</td>
+					</tr>
+					
+                    <tr>
+                        <td style="border: 0">
+                            <h:panelGrid columns="2" columnClasses="noborder, noborderPad">
+                                <h:outputLabel value="Passengers" />
+                                
+                                <h:selectOneMenu id="passengers-select"
+                                		value="#{searchFlightsController.nPassengers}" >
+                                    <c:forEach
+                                    		var = "i"
+                                    		begin = "1"
+                                    		end = "#{searchFlightsController.maxPassengersPerBooking}">
+                                        <f:selectItem
+                                        		itemValue="${i}"
+                                        		itemLabel="${i}" />
+                                    </c:forEach>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </td>
+                    </tr>
+                </table>
+                
+                <h:inputHidden id="availableDates"
+                		value="#{searchFlightsController.enabledDateS}" >
+                </h:inputHidden>
+
+                <!--in caso di altro fault vanishing L-->
+                <!--<h:commandButton class="btn btn-warning" action="#{searchFlightsController.backToFlightList}" value="Back"/>-->
+                <h:commandButton id="search-btn" class="btn btn-success"
+                		action="#{searchFlightsController.searchAnotherFlight}"
+                		value="Search another Flight"/>
+            </h:form>
+        </center>
+
+    </ui:define>
+</ui:composition>
+
+</html>

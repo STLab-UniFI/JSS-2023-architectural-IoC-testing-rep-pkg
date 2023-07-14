@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="layout/template.xhtml">
+	<ui:define name="body">
+
+		<link rel="stylesheet" href="css/FM-index.css" />
+
+		<div style="float: right" id='topdiv'>
+			<h:form id="admin-form"
+					rendered="#{loggedUserComponent.isAdmin()}">
+				<h:commandButton id="manage-flights-btn" class="btn btn-info"
+						action="#{flightController.startAndOpen()}" value="Manage Flights"
+						style="margin-left: 10px;">
+				</h:commandButton>
+				
+				<h:commandButton id="manage-airports-btn" class="btn btn-primary"
+						action="#{airportController.startAndOpen()}"
+						value="Manage Airports" style="margin-left: 10px;">
+				</h:commandButton>
+			</h:form>
+			
+			<h:form id="visitor-form"
+					rendered="#{!loggedUserComponent.loggedIn}">
+				<h:commandButton id="search-booking-btn" class="btn btn-primary"
+						action="#{routerComponent.navigate('booking-login')}"
+						value="My Booking">
+				</h:commandButton>
+
+				<h:commandButton id="login-btn" class="btn btn-warning"
+						action="#{routerComponent.navigate('login')}" value="Login"
+						style="margin-left: 10px;">
+				</h:commandButton>
+			</h:form>
+			
+<!-- 		<h:form rendered="#{loggedUserComponent.isRegisteredUser()}">
+				<h:commandButton class="btn btn-primary"
+						action="#{routerComponent.navigate('booking-list')}"
+						value="Logged My Bookings" style="margin-left: 10px;">
+				</h:commandButton>
+			</h:form>
+ -->		<h:form id="registered-form"
+ 					rendered="#{loggedUserComponent.isRegisteredUser()}">
+				<h:commandButton id="my-bookings-btn" class="btn btn-primary"
+						action="#{bookingViewController.beginBookingViewProcedure()}"
+						value="Logged My Bookings" style="margin-left: 10px;">
+				</h:commandButton>
+			</h:form>
+		</div>
+
+		<h2>Search flight</h2>
+
+		<h4 style="color: red; text-align: center;">#{searchFlightsController.error}</h4>
+
+		<center>
+			<h:form id="form"
+					style="width: 700px;">
+
+				<table>
+					<tr style="margin: 0">
+
+						<td style="width: 50%; margin-bottom: 0">
+							<h:panelGrid
+									columns="2"
+									columnClasses="noborder, noborder">
+								<h:outputLabel value="From"/>
+								
+								<h:selectOneMenu id="origin-select"
+										value="#{searchFlightsController.source}">
+									<f:selectItems
+											value="#{searchFlightsController.sources}"
+											var="airport" itemLabel="#{airport}"
+											itemDisabled="#{not searchFlightsController.enabledSource(airport)}"/>
+									
+									<f:ajax event="click" render="destination-select"/>
+								</h:selectOneMenu>
+							</h:panelGrid>
+						</td>
+						
+						<td style="width: 50%">
+							<h:panelGrid
+									columns="2"
+									columnClasses="noborder, noborder">
+								<h:outputLabel value="To"/>
+								
+								<h:selectOneMenu id="destination-select"
+										value="#{searchFlightsController.destination}">
+									<f:selectItems
+											value="#{searchFlightsController.destinations}"
+											var="airport"
+											itemLabel="#{airport}"
+											itemDisabled="#{not searchFlightsController.enabledDestination(airport)}"/>
+									
+									<f:ajax event="click" render="form:availableDates"
+											execute="origin-select destination-select"/>
+									
+									<f:ajax event="click" render="form:availableDatesBack"
+											execute="origin-select destination-select"/>
+								</h:selectOneMenu>
+							</h:panelGrid>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<h:panelGrid columns="2"
+								columnClasses="noborder, noborder">
+								<h:outputLabel value="Flight Date"/>
+								
+								<p:calendar id="departure-date-calendar"
+										minDate="new Date()"
+										widgetVar="calend"
+										pattern="dd/MM/yyyy"
+										value="#{searchFlightsController.departureDate}">
+									<f:ajax event="click" render="form:availableDates"
+											execute="origin-select destination-select"/>
+								</p:calendar>
+							</h:panelGrid>
+						</td>
+					</tr>
+					
+					<tr>
+						<td style="border: 0">
+							<h:panelGrid
+									columns="2"
+									columnClasses="noborder, noborderPad">
+								<h:outputLabel value="Passengers"/>
+								
+								<h:selectOneMenu id="passengers-select"
+										value="#{searchFlightsController.nPassengers}">
+									<c:forEach var="i"
+											begin="1"
+											end="#{searchFlightsController.maxPassengersPerBooking}">
+										<f:selectItem
+												itemValue="${i}"
+												itemLabel="${i}"/>
+									</c:forEach>
+								</h:selectOneMenu>
+							</h:panelGrid>
+						</td>
+					</tr>
+				</table>
+				
+				<h:inputHidden id="availableDates"
+						value="#{searchFlightsController.enabledDateS}">
+				</h:inputHidden>
+				
+				<h:commandButton id="search-flights-btn" class="btn btn-success"
+						action="#{searchFlightsController.searchFlight()}"
+						value="Search">
+				</h:commandButton>
+			</h:form>
+		</center>
+	</ui:define>
+</ui:composition>
+
+</html>

@@ -1,0 +1,60 @@
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:t="http://myfaces.apache.org/tomahawk"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+	
+    <h:head />
+	
+  <ui:composition template="layout/template.xhtml">
+	<ui:define name="body">
+		
+		<link rel="stylesheet" href="css/FM-index.css" />
+		
+		<h:panelGroup rendered="#{!bookingViewController.isLoggedIn()}">
+			<h2>My booking login</h2>
+		
+			<h:form>
+				<center>
+					<h4 style="color: red">#{bookingViewController.error}</h4>
+					
+					<label for="reservation-id-input">Reservation ID</label>
+					
+					<h:inputText id="reservation-id-input"
+							a:placeholder="Insert booking ID"
+							value="#{bookingViewController.selectedBooking.reservationId}"
+							style="width: 350px;">
+					</h:inputText>
+					
+					<label for="email-input">Email</label>
+					
+					<h:inputText id="email-input"
+							a:placeholder="Insert email"
+							value="#{bookingViewController.selectedBooking.email}"
+							style="width: 350px;">
+					</h:inputText>
+					
+					<br/>
+					
+ 					<h:commandButton id="back-btn"
+ 							styleClass="btn btn-danger"
+ 							action="#{routerComponent.navigate('index')}"
+ 							value="Back to home"
+ 							style="margin-left: 20px;">
+ 					</h:commandButton>
+ 					
+					<h:commandButton id="confirm-btn"
+							styleClass="btn btn-success"
+							action="#{bookingViewController.login()}"
+							value="Enter"
+							style="margin-left: 20px;">
+ 					</h:commandButton>
+				</center>
+			</h:form>
+		</h:panelGroup>		
+	</ui:define>
+   </ui:composition>
+</f:view>
