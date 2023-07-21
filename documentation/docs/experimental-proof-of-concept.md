@@ -86,3 +86,31 @@ To further evaluate the proposed methodology, we compared the fault detection ca
 Specifically, we considered _All Pages_ coverage, which requires that each  reachable page is visited at least once, and _All Navigation_ coverage, which verifies that each navigation (i.e., each edge of the page navigation diagram) is traversed at least once.
 
 You can find test suites and fault detection capabilities at [this page](test-suites/page-navigation-diagram.md).
+
+## Collection of Issues Related to IoC containers Configurations
+
+The following collection represents a subset of the available issues encountered by users using frameworks for dependency injection and automatic contexts management. The collection does not aim to contain all existing cases of the problem but to demonstrate the wide range of possible pitfalls that a programmer might face.
+
+## Collection of Issues Related to IoC containers Configurations
+
+The following collection represents a subset of the available issues encountered by users using frameworks for dependency injection and automatic contexts management. The collection does not aim to contain all existing cases of the problem but to demonstrate the wide range of possible pitfalls that a programmer might face.
+
+Queries used for StackOverflow: `[spring] or [cdi] or [bean] title:bean title:conversation/title:session answers:3.. score:+1..`
+
+* https://stackoverflow.com/questions/23510857/how-end-one-cdi-conversation-and-completely-destroy-all-variable-of-cdi-bean
+* https://stackoverflow.com/questions/9572418/new-cdi-conversation
+* http://stackoverflow.com/questions/29280296/cdi-conversationscope-end-and-begin-with-one-request
+* https://stackoverflow.com/questions/10300603/error-in-jsf-cdi-conversation-scope-when-begin-is-called-two-times/37879053
+* https://stackoverflow.com/questions/13906167/cdi-conversation-id-is-always-1-and-nonexistentconversationexception-caught-when
+* https://stackoverflow.com/questions/36609316/why-my-spring-session-scoped-bean-is-shared-across-sessions
+* https://stackoverflow.com/questions/38661685/sessionscoped-cdi-bean-is-a-different-instance-when-injected
+* https://stackoverflow.com/questions/11368662/injecting-a-sessionscoped-stateful-bean-in-entitylistener
+* https://stackoverflow.com/questions/41511511/unsatisfieddependencyexception-error-creating-bean-with-name
+* https://stackoverflow.com/questions/47529691/error-while-creating-bean-even-though-the-dependency-bean-is-there
+* https://stackoverflow.com/questions/28042426/spring-boot-error-creating-bean-with-name-datasource-defined-in-class-path-r
+* https://stackoverflow.com/questions/40058001/error-creating-bean-with-name-entitymanagerfactory-defined-in-class-path-resou
+* https://github.com/xpoft/spring-vaadin/issues/10
+* https://github.com/vaadin/flow/issues/5229
+* https://github.com/vaadin/spring/issues/288
+
+
