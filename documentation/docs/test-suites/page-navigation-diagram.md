@@ -2,7 +2,7 @@
 
 ## Page Navigation Diagram
 <p align="center">
-  <img src="../imgs/page-navigation-diagram-enlarged.png?raw=true" style="width:90%">
+  <img src="../../imgs/page-navigation-diagram-enlarged.png?raw=true" style="width:90%">
 </p>
 
 ## Coverage Criteria

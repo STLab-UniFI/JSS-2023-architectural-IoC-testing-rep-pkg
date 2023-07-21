@@ -1,0 +1,95 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+	<h:head />
+
+	<ui:composition template="layout/template.xhtml">
+		<ui:define name="body">
+
+			<link rel="stylesheet" href="css/FM-index.css" />
+
+			<f:event type="preRenderView"
+				listener="#{loggedUserComponent.checkNotLoggedin()}" />
+
+			<h:panelGroup rendered="#{loggedUserComponent.isRegisteredUser()}">
+
+				<h2>Show Bookings</h2>
+
+				<center>
+					<h:form id="form" style="max-width: 950px;">
+						<h:panelGroup
+							rendered="#{!bookingViewController.bookingList.isEmpty()}">
+							<table style="border: 2px; border-style: outset" id="bookings">
+								<tr style="font-weight: bold">
+									<td style="padding-left: 15px; width: 25%">Date</td>
+									<td>From</td>
+									<td>Duration</td>
+									<td>To</td>
+									<td>Passengers</td>
+									<td>Price</td>
+								</tr>
+								<ui:repeat var="booking"
+									value="#{bookingViewController.bookingList}">
+									<tr>
+										<td><h5>#{util.getOnlyDate(booking.flight.departureDate)}</h5></td>
+
+										<td style="width: 25%; padding-left: 15px"><h4
+												style="margin-bottom: 2px;">
+												#{booking.flight.sourceAirport.cityName} - <b>#{util.getOnlyHoursAndMinutes(booking.flight.departureTime)}</b>
+											</h4> <h:panelGroup
+												rendered="#{booking.flight.sourceAirport.GMT > 0}">
+												<i style="font-size: 18px; float: right;">GMT:
+													+#{booking.flight.sourceAirport.GMT}</i>
+											</h:panelGroup> <h:panelGroup
+												rendered="#{1 > booking.flight.sourceAirport.GMT}">
+												<i style="font-size: 18px; float: right;">GMT:
+													#{booking.flight.sourceAirport.GMT}</i>
+											</h:panelGroup></td>
+
+										<td><h5>#{util.getOnlyHoursAndMinutes(booking.flight.flightDuration)}</h5></td>
+
+										<td style="width: 25%"><h4 style="margin-bottom: 2px;">
+												#{booking.flight.destinationAirport.cityName} - <b>#{util.getArrivalTime(booking.flight)}</b>
+											</h4> <h:panelGroup
+												rendered="#{booking.flight.destinationAirport.GMT > 0}">
+												<i style="font-size: 18px; float: right;">GMT:
+													+#{booking.flight.destinationAirport.GMT}</i>
+											</h:panelGroup> <h:panelGroup
+												rendered="#{1 > booking.flight.destinationAirport.GMT}">
+												<i style="font-size: 18px; float: right;">GMT:
+													#{booking.flight.destinationAirport.GMT}</i>
+											</h:panelGroup></td>
+
+										<td><h4>#{booking.passengers.size()}</h4></td>
+
+										<td><h4>#{booking.finalPrice}</h4></td>
+
+										<td>
+											<h:commandButton class="btn btn-primary details-btn"
+													value="Details"
+													action="#{bookingViewController.viewBookingDetails(booking)}">
+											</h:commandButton>
+										</td>
+									</tr>
+								</ui:repeat>
+							</table>
+						</h:panelGroup>
+					</h:form>
+					<h:form>
+						<h:commandButton id="back-btn"
+								styleClass="btn btn-warning"
+								action="#{bookingViewController.backToHome}"
+								value="Back to home">
+						</h:commandButton>
+					</h:form>
+				</center>
+
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</f:view>

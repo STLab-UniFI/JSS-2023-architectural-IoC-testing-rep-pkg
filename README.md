@@ -26,7 +26,7 @@ If this study is helping your research, consider to cite it is as follows, thank
 
 ## Flight Manager Documentation
 
-The documentation about the experimental object, _Flight Manager_ is available [here](data/docs/flight-manager.md)
+The documentation about the experimental object, _Flight Manager_ is available [here](documentation/docs/flight-manager.md)
 
 
 
@@ -47,7 +47,7 @@ In particular:
 5. `allDefsTest` contains the test suite obtained with the _All Defs_ coverage criterion on the mcDFG
 6. `pndCoverages` contains the test suites obtained with the _All Pages_ and _All Navigations_ coverage criteria on the PND
 
-Further documentation about the test suites and the _Flight Manager_ faulty versions are available [here](data/docs/experimental-proof-of-concept.md)
+Further documentation about the test suites and the _Flight Manager_ faulty versions are available [here](documentation/docs/experimental-proof-of-concept.md)
 
 
 ## Quick start
@@ -74,13 +74,21 @@ This is the root directory of the repository. The directory is structured as fol
      .
      |
      |--- documentation/                    Further structured documentation of the replication package content
+     |      |
+     |      |--- docs/                      Markdown documents
+     |      |   |
+     |      |   |--- faulty-versions        Documents about the Flight Manager Faulty Versions
+     |      |   |
+     |      |   |--- test-suites            Documents about the test-suites
+     |      |
+     |      |--- imgs/                      Images used for the documentation
      |
      |--- flightmanager-versions/           Flight Manager versions
             |
-            |--- original-version/          Flight Manager Version with no injected faults      
+            |--- original-version/          Flight Manager version with no injected faults      
             |
-            |--- faulty-version-01/         Flight Manager Version with Fault #1 injected      
+            |--- faulty-version-01/         Flight Manager version with fault #1 injected      
             |
             |--- ...                        
             |
-            |--- faulty-version-32/         Flight Manager Version with Fault #32 injected
+            |--- faulty-version-32/         Flight Manager version with fault #32 injected

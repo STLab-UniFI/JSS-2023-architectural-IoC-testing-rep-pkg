@@ -1,0 +1,72 @@
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+	
+    <h:head />
+	
+   <ui:composition template="layout/template.xhtml">
+	<ui:define name="body">
+		
+		<link rel="stylesheet" href="css/FM-index.css" />
+		
+		<f:event type="preRenderView" listener="#{loggedUserComponent.checkLoggedin()}" />
+		<h:panelGroup rendered="#{!loggedUserComponent.isLoggedIn()}">
+			<h2>Administration login</h2>
+			
+			<h4 style="color: red; text-align: center;">#{loginController.error}</h4>
+			
+			<h:form id="loginForm">
+				<center>
+					<label for="username">Username</label>
+					
+					<h:inputText id="username-input"
+							a:placeholder="Insert username"
+							value="#{loginController.username}"
+							style="width: 350px;">
+					</h:inputText>
+					
+					<br/>
+					
+					<label for="password">Password</label>
+					
+					<h:inputSecret id="password-input"
+							a:placeholder="Insert password"
+							value="#{loginController.password}"
+							style="width: 350px;">
+					</h:inputSecret>
+					
+					<br/>
+					
+ 					<h:commandButton id="cancel-btn" class="btn btn-danger"
+ 							action="#{routerComponent.navigate('index')}"
+ 							value="cancel">
+ 					</h:commandButton>
+					
+					<h:commandButton id="user-login-btn" class="btn btn-success"
+							action="#{loginController.loginAsCustomer()}"
+							value="Login"
+							style="margin-left: 20px;">
+						<f:ajax onevent="click"
+								execute="#{bookingLoginController.unsetLogin()}">
+						</f:ajax>
+					</h:commandButton>
+					
+					<h:commandButton id="admin-login-btn" class="btn btn-warning"
+							action="#{loginController.loginAsAdmin()}"
+							value="Login as Admin"
+							style="margin-left: 20px;">
+						<f:ajax onevent="click"
+								execute="#{bookingLoginController.unsetLogin()}">
+						</f:ajax>
+					</h:commandButton>
+
+				</center>
+			</h:form>
+		</h:panelGroup>
+		
+	</ui:define>
+   </ui:composition>
+</f:view>
