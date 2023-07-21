@@ -50,9 +50,6 @@ In particular:
 Further documentation about the test suites and the _Flight Manager_ faulty versions are available [here](data/docs/experimental-proof-of-concept.md)
 
 
-
-
-
 ## Quick start
 
 In order to replicate the experimental proof of concept follow these steps:
@@ -61,4 +58,29 @@ In order to replicate the experimental proof of concept follow these steps:
 
 1. Clone the repository 
    - `git clone git@github.com:STLab-UniFI/JSS-2023-architectural-IoC-testing-rep-pkg.git`
-2. Choose a _Flight Manager_ version from those available in the `flightmanager-versions` folder
+2. Choose a _Flight Manager_ version from those available in the `flightmanager-versions` folder and open it with an IDE of your choice
+3. Update the project with Maven
+4. Run the class `/src/e2e/java/it/unifi/dinfo/stlab/flightmanager/util/H2Manager.java` with the command line argument `start` to setup the H2 in-memory DB automatically
+5. Exec the test suites at the path  `/src/e2e/java`
+
+### Troubleshooting
+
+Although once built through Maven everything should configure automatically, sometimes Selenium WebDriver might encounter issues related to browser drivers. It is recommended to resolve them by following the guide at this [link](https://www.selenium.dev/documentation/webdriver/drivers/)
+
+## Repository Structure
+This is the root directory of the repository. The directory is structured as follows:
+
+    JSS-2023-architectural-IoC-testing-rep-pkg
+     .
+     |
+     |--- documentation/                    Further structured documentation of the replication package content
+     |
+     |--- flightmanager-versions/           Flight Manager versions
+            |
+            |--- original-version/          Flight Manager Version with no injected faults      
+            |
+            |--- faulty-version-01/         Flight Manager Version with Fault #1 injected      
+            |
+            |--- ...                        
+            |
+            |--- faulty-version-32/         Flight Manager Version with Fault #32 injected
