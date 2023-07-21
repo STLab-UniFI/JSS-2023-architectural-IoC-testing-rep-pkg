@@ -37,8 +37,8 @@ The documentation about the experimental object, _Flight Manager_ is available [
 This repository contains both the original _Flight Manager_ version and the 32 mutant versions.
 All the 32+1 versions of _Flight Manager_ are available [here](flightmanager-versions).
 
-Each version contains all the test suites mentioned in the reference paper.
-You can find them at the path `flightmanager-versions/version-id/src/e2e/java` where `version-id` is the name of a subdirectory present at the path `flightmanager-versions/`.
+Each version contains all the test suites used in the reference paper.
+Test suites are available at the path `flightmanager-versions/version-id/src/e2e/java` where `version-id` is the name of a subdirectory, either `faulty-version-*` or `original-version`.
 In particular:
 1. `allEdgesTest` contains the test suite obtained with the _All Edges_ coverage criterion on the mcDFG
 2. `allNodesTest` contains the test suite obtained with the _All Nodes_ coverage criterion on the mcDFG
