@@ -95,7 +95,7 @@ The following collection represents a subset of the available issues encountered
 
 The following collection represents a subset of the available issues encountered by users using frameworks for dependency injection and automatic contexts management. The collection does not aim to contain all existing cases of the problem but to demonstrate the wide range of possible pitfalls that a programmer might face.
 
-Queries used for StackOverflow: `[spring] or [cdi] or [bean] title:bean title:conversation/title:session answers:3.. score:+1..`
+Queries used for StackOverflow: `[spring] or [cdi] or [bean] title:bean title:conversation/title:session answers:3.. score:+1..` accessed 20th July 2023.
 
 * https://stackoverflow.com/questions/23510857/how-end-one-cdi-conversation-and-completely-destroy-all-variable-of-cdi-bean
 * https://stackoverflow.com/questions/9572418/new-cdi-conversation
