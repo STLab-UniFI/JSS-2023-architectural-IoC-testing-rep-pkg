@@ -70,7 +70,9 @@ public class BeansRequestListener implements ServletRequestListener, Serializabl
 		logger.concludeLog(timeLine);
 		List<EnrichedRobustnessDiagram> erds = new TimeLineToERDConverter().convertTimeline(timeLine);
 
-		ErdToMcdfgMapper mapper = new ErdToMcdfgMapper();
+		ErdToMcdfgMapper.Settings mapperSettings = new ErdToMcdfgMapper.Settings();
+		mapperSettings.lazyDefinition = true;
+		ErdToMcdfgMapper mapper = new ErdToMcdfgMapper(mapperSettings);
 		McdfgBuilder mcdfgBuilder = new McdfgBuilder();
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
