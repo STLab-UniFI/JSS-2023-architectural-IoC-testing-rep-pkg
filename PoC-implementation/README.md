@@ -33,8 +33,8 @@ To obtain the mcDFG through the PoC from a system of your choice, follow these s
 
 #### Run the PoC
 
-1. *Optional*: Configure the filter. Namely `InstanceFilter.java` 
-    - In order to observe exclusively the instances of your interest, it is sufficient to update the variable `PACKAGE_OF_INTEREST` inside the `InstanceFilter.java` file to include the desired classes/packages.
+1. *Optional*: Configure the filter. Namely [InstanceFilter.java](PoC_code/src/main/java/beanTimelineManager/filter/InstanceFilter.java).  
+    - In order to observe exclusively the instances of your interest, it is sufficient to update the variable `PACKAGE_OF_INTEREST` inside the [InstanceFilter.java](PoC_code/src/main/java/beanTimelineManager/filter/InstanceFilter.java) file to include the desired classes/packages.
 2. Build the project and deploy it on the server
 3. Use the application under observation normally
 4. Upon completion, the resulting mcDFG will be displayed in the console.
