@@ -83,6 +83,8 @@ This is the root directory of the repository. The directory is structured as fol
      |      |
      |      |--- imgs/                      Images used for the documentation
      |
+     |--- PoC-implementation/               Proof of Concept implementation Code
+     |
      |--- flightmanager-versions/           Flight Manager versions
             |
             |--- original-version/          Flight Manager version with no injected faults      
