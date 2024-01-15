@@ -25,7 +25,7 @@ public class ErdToMcdfgMapper {
 
 		public Settings(Settings s) {
 			if (s != null) {
-				cdiDefinition = s.cdiDefinition;
+				lazyDefinition = s.lazyDefinition;
 				nodeSplitting = s.nodeSplitting;
 				minimizeEntriesOverNodes = s.minimizeEntriesOverNodes;
 			}
@@ -291,7 +291,7 @@ public class ErdToMcdfgMapper {
 	 ***********************************************************************************/
 	private void define(Entity e, Node n, McdfgBuilder b) {
 
-		if (settings.cdiDefinition) {
+		if (settings.lazyDefinition) {
 			return;
 		}
 		// initialize the defined list
@@ -302,7 +302,7 @@ public class ErdToMcdfgMapper {
 
 	private void define(RequestController rqstCtr, Node n, McdfgBuilder b) {
 
-		if (settings.cdiDefinition) {
+		if (settings.lazyDefinition) {
 			return;
 		}
 		// initialize the defined list
