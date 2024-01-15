@@ -15,7 +15,7 @@ public class ErdToMcdfgMapper {
 
 	static public class Settings {
 
-		public boolean cdiDefinition = false;
+		public boolean lazyDefinition = false;
 		public boolean nodeSplitting = true;
 		public boolean minimizeEntriesOverNodes = true;
 
