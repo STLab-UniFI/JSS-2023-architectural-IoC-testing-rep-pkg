@@ -3,26 +3,22 @@
 This repository is a companion page for the following publication, accepted to the [Journal of Systems and Software]([https://onlinelibrary.wiley.com/journal/10991689](https://www.sciencedirect.com/journal/journal-of-systems-and-software)):
 > Leonardo Scommegna, Roberto Verdecchia and Enrico Vicario. 2023. Unveiling Faulty User Sequences: A Model-based Approach to Test Three-tier Software Architectures.
 
-It contains the mcDFG generation tool, the documentation of the _Flight Manager_ web application, and all the material to replicate the results of the experimental proof of concept, including:
+It contains the proof of concept implementation of the approach, the documentation of the _Flight Manager_ web application, and all the material to replicate the results of the experimental proof of concept, including:
 installation steps, test suites, and all 32 faulty versions of _Flight Manager_.
 
-<!--
 ## How to cite us
 The scientific article describing design, execution, and main results of this study is available [here](https://www.google.com).<br> 
 If this study is helping your research, consider to cite it is as follows, thanks!
 
 ```
-@article{,
-  title={},
-  author={},
-  journal={},
-  volume={},
-  pages={},
-  year={},
-  publisher={}
+@article{scommegna2024unveiling,
+  title={Unveiling Faulty User Sequences: A Model-based Approach to Test Three-tier Software Architectures},
+  author={Scommegna, Leonardo and Verdecchia, Roberto and Vicario, Enrico},
+  journal={Journal of Systems and Software},
+  year={2024},
+  publisher={Elsevier}
 }
 ```
--->
 
 ## Proof of Concept Implementation
 
