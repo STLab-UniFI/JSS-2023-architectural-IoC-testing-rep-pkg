@@ -1,4 +1,4 @@
-# Unveling Faulty User Sequences: A Model-based Approach to Test Software Architectures
+# Unveiling Faulty User Sequences: A Model-based Approach to Test Three-tier Software Architectures
 
 This repository is a companion page for the following publication, submitted to the [Journal of Systems and Software]([https://onlinelibrary.wiley.com/journal/10991689](https://www.sciencedirect.com/journal/journal-of-systems-and-software)):
 > Leonardo Scommegna, Roberto Verdecchia and Enrico Vicario. 2023. Unveiling Faulty User Sequences: A Model-based Approach to Test Software Architectures. (Currently under review).
