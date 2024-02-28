@@ -24,10 +24,13 @@ If this study is helping your research, consider to cite it is as follows, thank
 ```
 -->
 
+## Proof of Concept Implementation
+
+The documentation and the source code for the experimental proof of concept implementation are available [here](PoC-implementation).
+
 ## Flight Manager Documentation
 
-The documentation about the experimental object, _Flight Manager_ is available [here](documentation/docs/flight-manager.md)
-
+The documentation about the experimental object, _Flight Manager_ is available [here](documentation/docs/flight-manager.md).
 
 
 
