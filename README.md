@@ -7,8 +7,8 @@ It contains the proof of concept implementation of the approach, the documentati
 installation steps, test suites, and all 32 faulty versions of _Flight Manager_.
 
 ## How to cite us
-The scientific article describing design, execution, and main results of this study is available [here](https://www.google.com).<br> 
-If this study is helping your research, consider to cite it is as follows, thanks!
+ 
+If this study is helping your research, consider citing it as follows, thanks!
 
 ```
 @article{scommegna2024unveiling,
