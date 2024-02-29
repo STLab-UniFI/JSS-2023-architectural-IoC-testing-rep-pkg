@@ -1,3 +1,6 @@
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10727675.svg)](https://doi.org/10.5281/zenodo.10727675)
+
 # Unveiling Faulty User Sequences: A Model-based Approach to Test Three-Tier Software Architectures
 
 This repository is a companion page for the following publication, accepted to the [Journal of Systems and Software](https://www.sciencedirect.com/journal/journal-of-systems-and-software):
